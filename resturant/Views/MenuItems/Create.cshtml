@@ -1,0 +1,31 @@
+﻿@model MenuItem
+@{
+    ViewData["Title"] = "Add in menu";
+}
+<h1>Add item</h1>
+
+
+<div class="container">
+
+    <form asp-action="Create" method="post">
+        <div class="form-group">
+            <label class="control-label">Name</label>
+            <input asp-for="name" class="form-control" />
+
+            <label class="control-label">Price</label>
+            <input asp-for="price" class="form-control" />
+
+            <label class="control-label">Description</label>
+            <input asp-for="description" class="form-control" />
+
+            <input class="form-check-input" asp-for="enabled" type="checkbox" />
+            <label class="form-check-label" asp-for="enabled">Available </label>
+
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Create" class="btn btn-primary" />
+            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+        </div>
+    </form>
+
+</div>

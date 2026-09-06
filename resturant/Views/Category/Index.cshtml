@@ -1,0 +1,55 @@
+﻿@model IEnumerable<Category>
+
+@{
+    ViewData["Title"] = "Category Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4 mb-4">Welcome</h1>
+</div>
+
+
+<div class="row text-end">
+    <div class="col-md-12">
+        <a asp-action="Create" class="btn btn-primary mx-3">add New item</a>
+    </div>
+</div>
+
+
+<div class="container">
+
+    <table class="table table-hover table-bordered border-dark">
+
+        <thead>
+            <tr class="bg-secondary">
+                <th>id</th>
+                <th>name</th>
+                <th>Edit & Delete</th>
+            </tr>
+
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.Name</td>
+                   
+                    <td>
+                        <a asp-action="Edit" asp-route-Id="@item.Id" class="btn btn-warning">Edit</a>
+                        <a asp-action="Delet" asp-route-Id="@item.Id" class="btn btn-danger">Delet</a>
+                    </td>
+
+                </tr>
+            }
+
+
+
+        </tbody>
+
+
+
+
+    </table>
+
+</div>

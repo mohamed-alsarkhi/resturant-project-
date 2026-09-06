@@ -1,0 +1,35 @@
+﻿@model MenuItem
+
+@{
+    ViewData["Title"] = "Delete item";
+}
+
+
+
+<h1>Delete itme</h1>
+
+
+<div class="container">
+
+    <form asp-action="Delet" method="post">
+        <div class="form-group">
+            <label class="control-label">Name</label>
+            <input asp-for="name" class="form-control" readonly />
+
+            <label class="control-label">Price</label>
+            <input asp-for="price" class="form-control" readonly />
+
+            <label class="control-label">Description</label>
+            <input asp-for="description" class="form-control" readonly />
+
+            <input class="form-check-input" asp-for="enabled" type="checkbox" disabled />
+            <label class="form-check-label" asp-for="enabled">Available </label>
+
+        </div>
+        <div class="form-group mt-4">
+            <input type="submit" value="Delet" class="btn btn-danger" />
+            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+        </div>
+    </form>
+
+</div>

@@ -1,0 +1,62 @@
+﻿@model IEnumerable<MenuItem>
+
+@{
+    ViewData["Title"] = "Menu Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4 mb-4">Welcome</h1>
+</div>
+
+
+<div class="row text-end">
+    <div class="col-md-12">
+        <a asp-action="Create" class="btn btn-primary mx-3">add New item</a>
+    </div>
+</div>
+
+
+<div class="container">
+
+    <table class="table table-hover table-bordered border-dark">
+
+        <thead>
+            <tr class="bg-secondary">
+                <th>id</th>
+                <th>name</th>
+                <th>price</th>
+                <th>description</th>
+                <th>enabled</th>
+                <th>Edit & Delete</th>
+
+
+            </tr>
+
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.id</td>
+                    <td>@item.name</td>
+                    <td>@item.price</td>
+                    <td>@item.description</td>
+                    <td>@item.enabled</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-Id="@item.id" class="btn btn-warning">Edit</a>
+                        <a asp-action="Delet" asp-route-Id="@item.id" class="btn btn-danger">Delet</a>
+                    </td>
+
+                </tr>
+            }
+
+
+
+        </tbody>
+
+
+
+
+    </table>
+
+</div>
