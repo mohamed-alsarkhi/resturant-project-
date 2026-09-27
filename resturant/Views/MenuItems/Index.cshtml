@@ -1,15 +1,16 @@
-﻿@model IEnumerable<MenuItem>
+﻿@using resturant.Dtos
+@model IEnumerable<MenuItemDto>
 
 @{
     ViewData["Title"] = "Menu Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4 mb-4">Welcome</h1>
+    <h1 class="display-4 mb-4">The Menu</h1>
 </div>
 
 
-<div class="row text-end">
+<div class="row text-end mb-2">
     <div class="col-md-12">
         <a asp-action="Create" class="btn btn-primary mx-3">add New item</a>
     </div>
@@ -26,6 +27,8 @@
                 <th>name</th>
                 <th>price</th>
                 <th>description</th>
+                
+                <th>category name</th>
                 <th>enabled</th>
                 <th>Edit & Delete</th>
 
@@ -41,6 +44,9 @@
                     <td>@item.name</td>
                     <td>@item.price</td>
                     <td>@item.description</td>
+                    
+                    <td>@item.CategoryName</td>
+
                     <td>@item.enabled</td>
                     <td>
                         <a asp-action="Edit" asp-route-Id="@item.id" class="btn btn-warning">Edit</a>

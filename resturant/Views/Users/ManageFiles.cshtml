@@ -1,0 +1,105 @@
+﻿@model UserFile
+
+@{
+    ViewData["Title"] = "User File";
+
+    var files = ViewBag.Files as IEnumerable<UserFile>;
+
+}
+
+<h1>User Files</h1>
+<h4> User:@ViewBag.userName  </h4>
+
+<div class="container mt-3">
+
+    <form asp-action="ManageFiles" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label class="control-label">File Name</label>
+            <input asp-for="UserId" hidden />
+            <input asp-for="Name" class="form-control" />
+        </div>
+
+     
+        <div class="form-group">
+            <label class="control-label">File</label>
+            <input type="file" name="file" class="form-control" />
+        </div>
+
+
+
+        <div class="form-group">
+            <input type="submit" value="Create" class="btn btn-primary" />
+            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+        </div>
+    </form>
+
+
+    <hr />
+
+
+    <h3>List Files</h3>
+
+    <table class="table table-striped">
+
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>File</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @{
+                int count = 1;
+            }
+
+            @foreach (var file in files)
+            {
+                <tr>
+
+                    <td>
+                        @count
+                    </td>
+
+                    <td>
+                        @file.Name
+                    </td>
+
+                    <td>
+
+                        <a href="@file.FileURL"
+                           target="_blank"
+                           class="btn btn-info">
+
+                            View File
+
+                        </a>
+
+                    </td>
+
+                    <td>
+
+                        <form asp-action="DeleteFile" asp-route-id="@file.Id" method="post" style="display:inline;"
+                              onsubmit="return confirm('Are you sure you want to delete this file?');">
+                            <button type="submit" class="btn btn-danger ">Delete</button>
+                        </form>
+                        
+
+                    </td>
+
+                </tr>
+
+                count++;
+            }
+
+        </tbody>
+
+    </table>
+
+    
+
+
+</div>

@@ -1,4 +1,5 @@
-﻿@model MenuItem
+﻿@using resturant.Dtos
+@model CreateMenuItemDto
 @{
     ViewData["Title"] = "Add in menu";
 }
@@ -17,6 +18,16 @@
 
             <label class="control-label">Description</label>
             <input asp-for="description" class="form-control" />
+
+
+            <div class="form-group">
+                <label class="control-label">Category</label>
+                <select class="form-control" asp-for="categoryid" asp-items="ViewBag.Categories">
+                    <option value="">Select Category</option>
+
+                </select>
+            </div>
+
 
             <input class="form-check-input" asp-for="enabled" type="checkbox" />
             <label class="form-check-label" asp-for="enabled">Available </label>

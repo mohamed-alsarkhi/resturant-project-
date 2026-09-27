@@ -3,6 +3,28 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Resturant Web</h1>
+    
+</div>
+<style>
+    body {
+        /* المسار يبدأ من علامة ~ التي تشير لمجلد wwwroot */
+        background-image: linear-gradient(rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.3)), url('/images/خلفيه موقع المطعم.png');
+        background-size: cover; /* تجعل الصورة تغطي كامل الشاشة */
+        background-position: center; /* توسيط الصورة */
+        background-repeat: no-repeat; /* منع تكرار الصورة */
+        background-attachment: fixed; /* تثبيت الخلفية عند التمرير */
+    }
+
+    /* تحسين وضوح النص فوق الصورة */
+    .hero-text {
+        color: white;
+        text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+        padding-top: 15%;
+    }
+</style>
+
+<div class="text-center hero-text">
+    <h1 class="display-3 fw-bold">Restaurant Web</h1>
+    <p class="lead">Welcome to our restaurant management system</p>
 </div>

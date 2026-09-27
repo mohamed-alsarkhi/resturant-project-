@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using resturant.Data;
+using resturant.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,15 @@ var conectionString = builder.Configuration.GetConnectionString("DefaultDatabase
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 options.UseSqlServer(conectionString));
+
+builder.Services.AddScoped<IMenuItemRepository, MenuItemRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+builder.Services.AddScoped<IPermissionRepository, PermissionRepository>(); 
+builder.Services.AddScoped<IRoleUserRepository, RoleUserRepository>();
+builder.Services.AddScoped<IUserFileRepository, UserFileRepository>();
+
 
 var app = builder.Build();
 

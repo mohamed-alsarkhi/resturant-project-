@@ -1,51 +1,69 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using resturant.Data;
+using resturant.Dtos;
 using resturant.Models;
+using resturant.Repositories;
 
 namespace resturant.Controllers
 {
     public class CategoryController : Controller
     {
 
-        private readonly AppDbContext _db;
-        public CategoryController(AppDbContext db)
+        private readonly ICategoryRepository _categoryRepository;
+        public CategoryController(ICategoryRepository categoryRepository)
         {
-            _db = db;
+            _categoryRepository = categoryRepository;
 
+        }
+
+        public void SelectListForCategories() {
+
+            IEnumerable<Category> categories = _categoryRepository.GetAll();
+            SelectList categorySelectList = new SelectList(categories, "Id", "Name");
+            ViewBag.Categories = categorySelectList;
         }
 
         public IActionResult Index()
         {
-            IEnumerable<Category> categories = _db.Categories.ToList();
+            IEnumerable<Category> categories = _categoryRepository.GetAll(); 
             return View(categories);
         }
 
         public IActionResult Create() {
 
+            SelectListForCategories();
+
             return View();
         }
 
         [HttpPost]
-        public IActionResult Create(Category categories)
+        public IActionResult Create(CreateCategoryDto categoriesDto)
         {
             if (ModelState.IsValid)
             {
-                _db.Categories.Add(categories);
-                _db.SaveChanges();
+                var categories = new Category
+                {
+                    Name = categoriesDto.Name
+
+                };
+
+                _categoryRepository.Add(categories);
+                _categoryRepository.Save();
                 return RedirectToAction("Index");
 
             }
-            return View();
+            return View(categoriesDto);
         }
         /// ------------------------------------------------------------------------
         public IActionResult Edit(int id)
         {
-            var cat = _db.Categories.Find(id);
+            var cat = _categoryRepository.GetById(id);
 
             if (cat ==null) {
                 return NotFound();
             }
-
+            SelectListForCategories();
             return View(cat);
         }
 
@@ -54,8 +72,8 @@ namespace resturant.Controllers
         {
             if (ModelState.IsValid)
             {
-                _db.Categories.Update(categories);
-                _db.SaveChanges();
+                _categoryRepository.Update(categories);
+                _categoryRepository.Save();
                 return RedirectToAction("Index");
 
             }
@@ -64,7 +82,7 @@ namespace resturant.Controllers
         /// ------------------------------------------------------------------------
         public IActionResult Delet(int id )
         {
-            var cat = _db.Categories.Find(id);
+            var cat = _categoryRepository.GetById(id);
 
             if (cat == null) {
                 return NotFound();
@@ -78,8 +96,8 @@ namespace resturant.Controllers
         {
             if (ModelState.IsValid)
             {
-                _db.Categories.Remove(categories);
-                _db.SaveChanges();
+                _categoryRepository.Delete(categories);
+                _categoryRepository.Save();
                 return RedirectToAction("Index");
 
             }
