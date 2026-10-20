@@ -1,92 +1,63 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using resturant.Models;
-using resturant.Repositories;
+using resturant.Application.Dtos;
+using resturant.Application.Services.Base;
 
 namespace resturant.Controllers
 {
     public class RoleController : Controller
     {
-        
-        private readonly IRoleRepository _roleRepository;
+        private readonly IRoleServices _roleServices;
 
-        private readonly IPermissionRepository _permissionRepository;
-
-        public RoleController( IRoleRepository roleRepository , IPermissionRepository permissionRepository)
+        public RoleController(IRoleServices roleServices)
         {
-            _roleRepository = roleRepository;
-
-            _permissionRepository = permissionRepository;
-            
+            _roleServices = roleServices;
         }
 
         public IActionResult Index()
         {
-            IEnumerable<Role> roles = _roleRepository.GetAll();
+            var roles = _roleServices.GetAllRoles();
             return View(roles);
         }
 
-     
-
-        
-
         [HttpPost]
-        public IActionResult Create(Role roles)
+        public IActionResult Create(CreateRoleDto rolesdto)
         {
             if (ModelState.IsValid)
             {
-                _roleRepository.Add(roles);
-                _roleRepository.Save();
+                _roleServices.CreateRole(rolesdto);
                 return RedirectToAction("Index");
-
             }
-            return View();
+            return View(rolesdto);
         }
 
-
-        
         [HttpPost]
-        public IActionResult Edit(Role roles)
+        public IActionResult Edit(UpdateRoleDto rolesdto)
         {
             if (ModelState.IsValid)
             {
-                _roleRepository.Update(roles);
-                _roleRepository.Save();
+                _roleServices.UpdateRole(rolesdto);
                 return RedirectToAction("Index");
-
             }
-            return View();
+            return View(rolesdto);
         }
 
-        
         [HttpPost]
         public IActionResult Delete(int id)
         {
-            var role = _roleRepository.GetById(id);
-            if (role == null)
-            {
-                return NotFound();
-            }
-
-            _roleRepository.Delete(role);
-            _roleRepository.Save();
+            _roleServices.DeleteRole(id);
             return RedirectToAction("Index");
-           
         }
 
         public IActionResult AssignPermissions(int roleId)
         {
-            var role = _roleRepository.GetRoleWithPermissions(roleId);
+            var role = _roleServices.GetRoleWithPermissions(roleId);
 
             if (role == null)
             {
                 return NotFound();
             }
 
-            var permissions = _permissionRepository.GetAll();
-
-            ViewBag.AllPermissions = permissions;
+            ViewBag.AllPermissions = _roleServices.GetAllPermissions();
 
             ViewBag.AssignedPermissions = role.Permissions
                 .Select(p => p.Id)
@@ -95,34 +66,17 @@ namespace resturant.Controllers
             return View(role);
         }
 
-
         [HttpPost]
         public IActionResult AssignPermissions(int roleId, List<int> permissionIds)
         {
-            var role = _roleRepository.GetRoleWithPermissions(roleId);
+            var role = _roleServices.GetRoleWithPermissions(roleId);
 
             if (role == null)
             {
                 return NotFound();
             }
 
-
-            // Remove old permissions
-            role.Permissions.Clear();
-
-
-            // Get selected permissions
-            var permissions = _permissionRepository.GetSelectedPermissions(permissionIds);
-
-
-            // Add selected permissions
-            foreach (var permission in permissions)
-            {
-                role.Permissions.Add(permission);
-            }
-
-
-            _roleRepository.Save();
+            _roleServices.AssignPermissions(roleId, permissionIds);
 
             return RedirectToAction("Index");
         }

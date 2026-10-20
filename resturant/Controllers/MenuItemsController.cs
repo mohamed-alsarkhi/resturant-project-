@@ -1,30 +1,29 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using resturant.Data;
-using resturant.Dtos;
-using resturant.Models;
-using resturant.Repositories;
+using resturant.Application.Dtos;
+using resturant.Application.Services.Base;
 
 namespace resturant.Controllers
 {
     public class MenuItemsController : Controller
     {
 
-        private readonly IMenuItemRepository _menuItemRepository;
-        private readonly ICategoryRepository _categoryRepository; 
-
+       
         
-        public MenuItemsController(IMenuItemRepository menuItemRepository, ICategoryRepository categoryRepository)
+        private readonly IMenuItemsServices _menuItemServices;
+
+
+
+        public MenuItemsController(IMenuItemsServices menuItemServices)
         {
-            _menuItemRepository = menuItemRepository;
-            _categoryRepository = categoryRepository;
+            
+            _menuItemServices = menuItemServices;
         }
 
         public IActionResult Index()
         {
 
-            var menu = _menuItemRepository.GetAllWithCategory();
+            var menu = _menuItemServices.GetAllWithCategory();
             return View(menu);
         }
 
@@ -38,7 +37,7 @@ namespace resturant.Controllers
         private void SelectListForCategories()
         {
             //IEnumerable<Category> categories = _db.Categories.ToList();
-            var categories = _categoryRepository.GetAll();
+            var categories = _menuItemServices.GetAllCategories();
             SelectList categorySelectList = new SelectList(categories, "Id", "Name");
             ViewBag.Categories = categorySelectList;
         }
@@ -48,17 +47,7 @@ namespace resturant.Controllers
         {
             if (ModelState.IsValid) {
 
-                var item = new MenuItem() ;
-
-                
-                item.name = itemDto.name;
-                item.price = itemDto.price;
-                item.description = itemDto.description;
-                item.enabled = itemDto.enabled;
-                item.categoryid = itemDto.categoryid;
-
-                _menuItemRepository.Add(item);
-                _menuItemRepository.Save();
+                _menuItemServices.CreateMenuItemDto(itemDto);
                 return RedirectToAction("Index");
                     
             }
@@ -68,22 +57,12 @@ namespace resturant.Controllers
 
         public IActionResult Edit(int Id)
         {
-            var item = _menuItemRepository.GetById(Id);
-            if (item == null)
+            var itemDto = _menuItemServices.GetForEdit(Id);
+            if (itemDto == null)
             {
                 return NotFound();
             }
-            var itemDto = new UpdateMenuItemDto
-            {
-
-                id = item.id,
-                name = item.name,
-                price = item.price,
-                description = item.description,
-                enabled = item.enabled,
-                categoryid = item.categoryid
-            };
-
+         
             SelectListForCategories();
             return View(itemDto);
         }
@@ -92,19 +71,7 @@ namespace resturant.Controllers
         {
             if (ModelState.IsValid)
             {
-                var item = new MenuItem
-                {
-                    id = itemDto.id,
-                    name = itemDto.name,
-                    price = itemDto.price,
-                    description = itemDto.description,
-                    enabled = itemDto.enabled,
-                    categoryid = itemDto.categoryid
-
-                };
-
-                _menuItemRepository.Update(item);
-                _menuItemRepository.Save();
+                _menuItemServices.UpdateMenuItem(itemDto);
                 return RedirectToAction("Index");
 
             }
@@ -113,7 +80,7 @@ namespace resturant.Controllers
 
         public IActionResult Delet(int Id)
         {
-            var item = _menuItemRepository.GetById(Id);
+            var item = _menuItemServices.GetForDelete(Id);
             if (item == null)
             {
                 return NotFound();
@@ -121,16 +88,10 @@ namespace resturant.Controllers
             return View(item);
         }
         [HttpPost]
-        public IActionResult Delet(MenuItem item)
+        public IActionResult DeletConfirmed(int id)
         {
-            if (ModelState.IsValid)
-            {
-                _menuItemRepository.Delete(item);
-                _menuItemRepository.Save();
-                return RedirectToAction("Index");
-
-            }
-            return View();
+            _menuItemServices.DeleteMenuItem(id);
+            return RedirectToAction("Index");
         }
 
         //public List<MenuItem> menu()

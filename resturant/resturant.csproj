@@ -20,4 +20,10 @@
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\resturant.Application\resturant.Application.csproj" />
+    <ProjectReference Include="..\resturant.Domain\resturant.Domain.csproj" />
+    <ProjectReference Include="..\resturant.Infrastructure\resturant.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

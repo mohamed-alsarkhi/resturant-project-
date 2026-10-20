@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using resturant.Data;
-using resturant.Migrations;
-using resturant.Repositories;
+using resturant.Application.Services.Base;
+
 
 namespace resturant.Controllers
 {
@@ -9,12 +8,12 @@ namespace resturant.Controllers
     {
        
 
-        private readonly IUserRepository _userRepository;
+        private readonly IUserServices _userServices;
 
-        public AccountsController( IUserRepository userRepository)
+        public AccountsController(IUserServices userServices)
         {
-            
-            _userRepository= userRepository;
+
+            _userServices = userServices;
         }
 
         public IActionResult Login()
@@ -25,8 +24,8 @@ namespace resturant.Controllers
         [HttpPost]
         public IActionResult Login(string username, string password)
         {
-            var user = _userRepository.GetUserByUsername(username);
-            if (user != null && BCrypt.Net.BCrypt.Verify(password, user.HashPassword))
+           
+            if (_userServices.login(username, password))
             {
                 // Authentication successful
                 // You can set up session or authentication cookie here

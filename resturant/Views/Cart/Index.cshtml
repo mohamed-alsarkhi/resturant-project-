@@ -1,0 +1,74 @@
+﻿@using resturant.Application.Dtos
+@model List<CartItemDto>
+
+@{
+    ViewData["Title"] = "سلة المشتريات";
+}
+
+<div class="container my-5">
+    <h2 class="mb-4 text-center">سلة المشتريات</h2>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-info text-center py-5">
+            <h4>السلة فارغة حالياً!</h4>
+            <p class="text-muted">لم تقم بإضافة أي وجبات بعد.</p>
+            <a asp-controller="MenuItems" asp-action="Index" class="btn btn-primary mt-3">تصفح قائمة الطعام</a>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered align-middle text-center">
+                <thead class="table-dark">
+                    <tr>
+                        <th>الصورة</th>
+                        <th>اسم الوجبة</th>
+                        <th>السعر الفردي</th>
+                        <th>الكمية</th>
+                        <th>المجموع</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td style="width: 100px;">
+                                @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                {
+                                    <img src="@item.ImageUrl" width="70" height="70" style="object-fit: cover; border-radius: 8px;" alt="@item.Name" />
+                                }
+                                else
+                                {
+                                    <span class="text-muted">لا توجد صورة</span>
+                                }
+                            </td>
+                            <td class="fw-bold">@item.Name</td>
+                            <td>@item.Price.ToString("C")</td>
+                            <td>
+                                <span class="badge bg-secondary fs-6">@item.Quantity</span>
+                            </td>
+                            <td class="fw-bold text-success">@item.Total.ToString("C")</td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr class="table-light">
+                        <td colspan="4" class="text-end fw-bold fs-5">الإجمالي الكلي:</td>
+                        <td class="fw-bold fs-5 text-primary">@Model.Sum(x => x.Total).ToString("C")</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <div class="d-flex justify-content-between mt-4">
+            <a asp-controller="MenuItems" asp-action="Index" class="btn btn-outline-secondary">
+                العودة للمنيو
+            </a>
+            <!-- سنربط هذا الزر لاحقاً بإنهاء الطلب وحفظ الفاتورة -->
+            <button class="btn btn-success btn-lg">
+                إتمام الطلب والدفع
+            </button>
+        </div>
+    }
+</div>

@@ -1,4 +1,6 @@
-﻿@model Category
+﻿@using resturant.Application.Dtos
+
+@model CategoryDto
 
 @{
     ViewData["Title"] = "Delete Category";
@@ -11,7 +13,8 @@
 
 <div class="container">
 
-    <form asp-action="Delet" method="post">
+    <form asp-action="DeletConfirmed" method="post">
+        <input type="hidden" asp-for="Id" />
         <div class="form-group mb-4">
             <label class="control-label">Name</label>
             <input asp-for="Name" class="form-control" readonly />

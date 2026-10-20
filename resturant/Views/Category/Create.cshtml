@@ -1,4 +1,5 @@
-﻿@using resturant.Dtos
+﻿@using resturant.Application.Dtos
+
 @model CreateCategoryDto
 @{
     ViewData["Title"] = "Add in Category";
@@ -11,10 +12,11 @@
     <form asp-action="Create" method="post">
         <div class="form-group mb-4">
             <label class="control-label">Category Name</label>
-            <select class="form-control" asp-for="Name" asp-items="ViewBag.Categories">
+            <input asp-for="Name" class="form-control" />
+            @* <select class="form-control" asp-for="Name" asp-items="ViewBag.Categories">
                 <option value="">Select Category</option>
 
-            </select>
+            </select> *@
 
         </div>
         <div class="form-group">

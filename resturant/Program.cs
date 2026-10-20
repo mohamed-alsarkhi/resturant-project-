@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using resturant.Data;
-using resturant.Repositories;
-
+using resturant.Infrastructure.Data;
+using resturant.Infrastructure.Repositories;
+using resturant.Infrastructure.Repositories.Base;
+using resturant.Application.Services;
+using resturant.Application.Services.Base;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -18,7 +20,27 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IPermissionRepository, PermissionRepository>(); 
 builder.Services.AddScoped<IRoleUserRepository, RoleUserRepository>();
-builder.Services.AddScoped<IUserFileRepository, UserFileRepository>();
+builder.Services.AddScoped<IUserFileRepository, UserFileRepository>(); 
+
+
+builder.Services.AddScoped<IMenuItemsServices, MenuItemsServices>(); 
+builder.Services.AddScoped<ICategoryServices, CategoryServices>();
+builder.Services.AddScoped<IPermissionServices, PermissionServices>();
+builder.Services.AddScoped<IRoleServices, RoleServices>();
+builder.Services.AddScoped<IUserServices, UserServices>(); 
+builder.Services.AddScoped<IOrderServices, OrderServices>();
+
+////////////
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+//لتفيعل الجلسه 
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
 
 var app = builder.Build();
@@ -35,6 +57,9 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+//midelwire
+app.UseSession();
 
 app.UseAuthorization();
 

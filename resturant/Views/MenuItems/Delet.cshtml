@@ -1,4 +1,6 @@
-﻿@model MenuItem
+﻿@using resturant.Application.Dtos
+
+@model MenuItemDto
 
 @{
     ViewData["Title"] = "Delete item";
@@ -11,7 +13,7 @@
 
 <div class="container">
 
-    <form asp-action="Delet" method="post">
+    <form asp-action="DeletConfirmed" asp-route-id="@Model.id" method="post">
         <div class="form-group">
             <label class="control-label">Name</label>
             <input asp-for="name" class="form-control" readonly />

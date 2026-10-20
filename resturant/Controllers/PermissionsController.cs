@@ -1,74 +1,51 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using resturant.Data;
-using resturant.Models;
-using resturant.Repositories;
+using resturant.Application.Dtos;
+using resturant.Application.Services.Base;
 
 namespace resturant.Controllers
 {
     public class PermissionsController : Controller
     {
-       
-        private readonly IPermissionRepository _permissionRepository;
+        private readonly IPermissionServices _permissionServices;
 
-        public PermissionsController( IPermissionRepository permissionRepository)
+        public PermissionsController(IPermissionServices permissionServices)
         {
-            
-            _permissionRepository = permissionRepository;
-
+            _permissionServices = permissionServices;
         }
 
         public IActionResult Index()
         {
-            IEnumerable<Permission> Permission = _permissionRepository.GetAll();
-            return View(Permission);
+            var permissions = _permissionServices.GetAllPermissions();
+            return View(permissions);
         }
 
-
-
-
-
         [HttpPost]
-        public IActionResult Create(Permission Permission)
+        public IActionResult Create(CreatePermissionDto permissionDto)
         {
             if (ModelState.IsValid)
             {
-                _permissionRepository.Add(Permission);
-                _permissionRepository.Save();
+                _permissionServices.CreatePermission(permissionDto);
                 return RedirectToAction("Index");
-
             }
-            return View();
+            return View(permissionDto);
         }
 
-
-
         [HttpPost]
-        public IActionResult Edit(Permission Permission)
+        public IActionResult Edit(UpdatePermissionDto permissionDto)
         {
             if (ModelState.IsValid)
             {
-                _permissionRepository.Update(Permission);
-                _permissionRepository.Save();
+                _permissionServices.UpdatePermission(permissionDto);
                 return RedirectToAction("Index");
-
             }
             return View();
         }
-
 
         [HttpPost]
         public IActionResult Delete(int id)
         {
-            var per = _permissionRepository.GetById(id);
-            if (per == null)
-            {
-                return NotFound();
-            }
-
-            _permissionRepository.Delete(per);
-            _permissionRepository.Save();
+            _permissionServices.DeletePermission(id);
             return RedirectToAction("Index");
-
         }
     }
 }

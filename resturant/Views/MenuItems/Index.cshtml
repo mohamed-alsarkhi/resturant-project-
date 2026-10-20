@@ -1,4 +1,4 @@
-﻿@using resturant.Dtos
+﻿@using resturant.Application.Dtos
 @model IEnumerable<MenuItemDto>
 
 @{
@@ -25,11 +25,13 @@
             <tr class="bg-secondary">
                 <th>id</th>
                 <th>name</th>
+                <th>image</th>
                 <th>price</th>
                 <th>description</th>
-                
+
                 <th>category name</th>
                 <th>enabled</th>
+                <th>Add to Cart</th>
                 <th>Edit & Delete</th>
 
 
@@ -42,12 +44,27 @@
                 <tr>
                     <td>@item.id</td>
                     <td>@item.name</td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(item.ImageURL))
+                        {
+                            <img src="@item.ImageURL" width="60" height="60" style="object-fit: cover; border-radius: 6px;" alt="@item.name" />
+                        }
+                        else
+                        {
+                            <span class="text-muted">لا توجد صورة</span>
+                        }
+                    </td>
                     <td>@item.price</td>
                     <td>@item.description</td>
-                    
+
                     <td>@item.CategoryName</td>
 
                     <td>@item.enabled</td>
+                    <td>
+                        <a asp-controller="Cart" asp-action="AddToCart" asp-route-id="@item.id" class="btn btn-success">
+                            <i class="bi bi-cart-plus"></i> أضف للسلة
+                        </a>
+                    </td>
                     <td>
                         <a asp-action="Edit" asp-route-Id="@item.id" class="btn btn-warning">Edit</a>
                         <a asp-action="Delet" asp-route-Id="@item.id" class="btn btn-danger">Delet</a>
